@@ -1,11 +1,8 @@
-import dotenv from "dotenv";
 import express from "express";
 
 import { getAiAnswer } from "./ai.js";
 import { env } from "./env.js";
 import { search, fetchFromSearchResults } from "./search.js";
-
-dotenv.config();
 
 const app = express();
 
@@ -37,13 +34,13 @@ app.get("/search", async (req, res) => {
   const context = searchResultsWithText
     .map(
       (result, i) => `
-[${i + 1}] ${result.link}
-Title: ${result.title}
-${result.text || result.snippet}`
+  [${i + 1}] ${result.link}
+  Title: ${result.title}
+  ${result.text || result.snippet}`
     )
     .join("\n\n");
 
-  console.log("birajlog context:", context);
+  // console.log("birajlog context:", context);
 
   const answer = await getAiAnswer(userQuery, context);
   if (typeof answer === "string") {

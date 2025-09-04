@@ -3,7 +3,8 @@ import { Readable } from "node:stream";
 import { env } from "./env.js";
 
 const GROQ_API = "https://api.groq.com/openai/v1/chat/completions";
-const MODEL = "llama-3.3-70b-versatile";
+// const MODEL = "llama-3.3-70b-versatile";
+const MODEL = "openai/gpt-oss-120b";
 
 /**
  * Gets a response from the OpenRouter API.
@@ -29,7 +30,7 @@ async function getResponse(messages, stream = true) {
   });
 
   if (!response.ok) {
-    const errMsg = (await response.text()).slice(0, 100);
+    const errMsg = (await response.text()).slice(0, 400);
     console.error(response.status, errMsg);
     throw new Error("Network response was not ok");
   }
@@ -89,9 +90,11 @@ Remember: Only use citation numbers that match actual search result numbers.`;
  */
 function systemPromptWithSearchResults(searchResults) {
   return `${SP_SEARCH_RESULTS}
-  
+
+Today's date: ${new Date().toString()}
+
 Search results:
-${searchResults.slice(0, 6000)}`;
+${searchResults.slice(0, 20_000)}`;
 }
 
 const SP_SEARCH_QUERY = `Intelligently convert user's message into a Google search query
@@ -101,6 +104,7 @@ that will get the most relevant results.
 - Return only the search query
 - No explanations or context
 - Don't wrap the query in quotes
+- If user mentions how to format the response or some kind of model instruction, then that probably should NOT be in the query
 
 Example:
 User: What is the capital of France?
