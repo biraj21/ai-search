@@ -38,7 +38,7 @@ export async function search(query) {
   const response = await fetch(url.toString());
 
   if (!response.ok) {
-    const errMsg = (await res.text()).slice(0, 100);
+    const errMsg = (await res.text()).slice(0, 400);
     console.error(response.status, errMsg);
     throw new Error(`HTTP error! status: ${response.status}`);
   }
@@ -91,13 +91,25 @@ export async function fetchFromSearchResults(results) {
         text = await response.json();
       } else if (contentType.includes("text/html")) {
         const html = await response.text();
-        const dom = new JSDOM(html, { virtualConsole });
-        const body = dom.window.document.body;
+        const { window } = new JSDOM(html, { url: source.link, virtualConsole, pretendToBeVisual: true });
+        const body = window.document.body;
 
         // delete unnecessary tags from the body
         body.querySelectorAll("script,style,noscript").forEach((el) => el.remove());
 
-        text = body.textContent?.replace(/\s+/g, " ").trim() ?? "";
+        // text = body.textContent?.replace(/\s{2,}/g, " ").trim() ?? "";
+        const textArr = [];
+        function traverse(node) {
+          if (node.nodeType === window.Node.TEXT_NODE && node.textContent.trim()) {
+            textArr.push(node.textContent.replace(/\s{2,}/g, "-"));
+          } else {
+            node.childNodes.forEach(traverse);
+          }
+        }
+
+        traverse(body);
+
+        text = textArr.join(" ").trim() ?? "";
       } else if (contentType.includes("text/plain") || contentType.includes("application/xml")) {
         text = await response.text();
       }
