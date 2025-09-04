@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
-import Markdown from "react-markdown";
 import { Globe, Sparkles } from "lucide-react";
+import { useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 import { Source } from "@/types";
 import Tooltip from "./ui/Tooltip";
@@ -62,7 +63,8 @@ const SearchResults: React.FC<SearchResultsProps> = ({ sources, content, isStrea
         Answer
       </h2>
       <div ref={responseRef} className="text-neutral-200 leading-relaxed flex-1 max-w-none mt-4" id="search-response">
-        <Markdown
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
           components={{
             p: ({ node, ...props }) => {
               return <div role="paragraph" className="paragraph" {...props} />;
@@ -116,7 +118,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({ sources, content, isStrea
           }}
         >
           {content}
-        </Markdown>
+        </ReactMarkdown>
         {isStreaming && <span className="inline-block w-2 h-4 ml-1 bg-purple-400 animate-pulse" />}
       </div>
     </div>
