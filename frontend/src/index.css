@@ -12,19 +12,26 @@
   padding: 2rem;
 }
 
-.nunito-font {
-  font-family: "Nunito", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: italic;
-}
-
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  font-family: "Nunito", serif;
-  background-color: black;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  background: #0a0a0a;
+  color: #e5e5e5;
+  line-height: 1.6;
+}
+
+/* Focus on readability */
+.reading-optimized {
+  font-size: 16px;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+/* Minimal transitions for performance */
+* {
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
 /* Custom scrollbar for Webkit browsers */
@@ -56,10 +63,10 @@ body {
   @apply whitespace-pre-wrap mt-1;
 }
 #search-response a {
-  @apply text-purple-400 underline;
+  @apply text-blue-400 underline decoration-blue-400/50 underline-offset-2;
 }
 #search-response .citation {
-  @apply text-purple-400 bg-neutral-700/30 text-xs rounded p-1 mx-1;
+  @apply text-blue-400 bg-blue-500/10 border border-blue-500/20 text-xs rounded px-2 py-1 mx-1 font-medium;
 }
 #search-response h1,
 #search-response h2,
@@ -67,8 +74,31 @@ body {
 #search-response h4,
 #search-response h5,
 #search-response h6 {
-  @apply font-bold;
+  @apply font-bold mt-4 mb-2;
 }
 #search-response .paragraph {
   @apply whitespace-pre-wrap mt-1 mb-4;
+}
+
+#search-response table {
+  @apply w-full text-sm my-6 border-collapse;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  overflow: hidden;
+}
+#search-response th,
+#search-response td {
+  @apply border-0 px-4 py-3 text-left;
+}
+#search-response th {
+  @apply bg-gray-800 font-semibold text-gray-100 border-b border-gray-600;
+}
+#search-response td {
+  @apply bg-gray-900 text-gray-200;
+}
+#search-response tr:nth-child(even) td {
+  @apply bg-gray-800/50;
+}
+#search-response tbody tr:hover td {
+  @apply bg-gray-700/30;
 }

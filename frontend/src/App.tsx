@@ -30,18 +30,28 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen  text-white">
-      <div className="max-w-3xl mx-auto">
-        <div className="flex items-center justify-center gap-3 mb-12">
-          <Brain className="w-8 h-8 text-purple-400" />
-          <h1 className="text-2xl font-semibold bg-gradient-to-r from-purple-400 to-pink-400 text-transparent bg-clip-text">
-            AI Search Assistant
-          </h1>
+    <div className="min-h-screen bg-zinc-950">
+      <div className="max-w-6xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
+        {/* Compact header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-800 border border-gray-700">
+              <Brain className="w-4 h-4 text-gray-300" />
+            </div>
+            <h1 className="text-xl font-semibold text-white">AI Search</h1>
+          </div>
         </div>
 
         <div className="space-y-6">
           <SearchInput onSearch={handleSearch} isLoading={isStreaming} />
-          <SearchResults sources={sources} content={content} isStreaming={isStreaming} />
+          {(sources.length > 0 || content || isStreaming) && (
+            <SearchResults
+              sources={sources}
+              content={content}
+              isStreaming={isStreaming}
+              hasStartedStreaming={!!content}
+            />
+          )}
         </div>
       </div>
     </div>
