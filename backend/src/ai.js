@@ -81,7 +81,7 @@ FORMAT:
 For insufficient/no results:
 "The search results don't contain enough information to answer this query."
 
-Remember: Only use citation numbers that match actual search result numbers.`;
+Remember: Only use citation numbers that match actual search result numbers and always return valid markdown format.`;
 
 /**
  *

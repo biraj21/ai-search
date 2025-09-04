@@ -1,6 +1,6 @@
 # AI Search
 
-This is a fairly simple project that was inspired by [Perplexity](https://perplexity.ai). It uses [llama-3.3-70b-versatile](https://github.com/meta-llama/llama-models/blob/main/models/llama3_3/MODEL_CARD.md) (hosted on [Groq](https://console.groq.com/docs/models)) and [Google Custom Search JSON API](https://developers.google.com/custom-search/v1/overview).
+This is a fairly simple project that was inspired by [Perplexity](https://perplexity.ai). It uses [gpt-oss-120b](https://huggingface.co/openai/gpt-oss-120b) hosted on [Groq](https://console.groq.com/docs/model/openai/gpt-oss-120b) and [Google Custom Search JSON API](https://developers.google.com/custom-search/v1/overview).
 
 ![Screenshot](./images/ss.png)
 
@@ -29,9 +29,8 @@ This is a fairly simple project that was inspired by [Perplexity](https://perple
 ## Acknowledgements
 
 1. [Perplexity](https://perplexity.ai) for inspiration
-2. [Meta](https://meta.com/) for [Llama](https://github.com/meta-llama/llama-models/blob/main/models/llama3_3/MODEL_CARD.md)
+2. [OpenAI](https://huggingface.co/openai/gpt-oss-120b) for gpt-oss-120b model
 3. [Groq](https://groq.com/) for inference
 4. [Google](https://developers.google.com/custom-search/v1/overview) for data
-5. [bolt](https://bolt.new) and [v0](https://v0.dev) for frontend
-6. [Claude](https://claude.ai/) for helping me with prompts
-7. And [ChatGPT](https://chatgpt.com/) of course
+5. [Claude](https://claude.ai/) for helping me with prompts
+6. And [ChatGPT](https://chatgpt.com/) of course
