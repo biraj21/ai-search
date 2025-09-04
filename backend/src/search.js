@@ -1,7 +1,6 @@
 import jsdom, { JSDOM } from "jsdom";
 
 import { env } from "./env.js";
-import { getAiSearchQuery } from "./ai.js";
 
 const virtualConsole = new jsdom.VirtualConsole();
 virtualConsole.on("error", () => {
@@ -22,18 +21,18 @@ const SEARCH_API = "https://www.googleapis.com/customsearch/v1";
 /**
  * Searches Google Custom Search API for the given query.
  *
- * @param {string} query
+ * @param {string} query - The optimized search query
+ * @param {number} sourceCount - Number of sources to fetch
  * @return {Promise<SearchResult[]>}
  */
-export async function search(query) {
-  query = await getAiSearchQuery(query);
-  console.log(`birajlog google search query: '${query}'`);
+export async function search(query, sourceCount = 5) {
+  console.log(`birajlog google search query: '${query}' (${sourceCount} sources)`);
 
   const url = new URL(SEARCH_API);
   url.searchParams.append("key", env.GOOGLE_API_KEY);
   url.searchParams.append("cx", env.GOOGLE_SEARCH_ENGINE_ID);
   url.searchParams.append("q", query);
-  url.searchParams.append("num", "5");
+  url.searchParams.append("num", sourceCount.toString());
 
   const response = await fetch(url.toString());
 

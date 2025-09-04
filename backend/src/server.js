@@ -1,6 +1,6 @@
 import express from "express";
 
-import { getAiAnswer } from "./ai.js";
+import { getAiAnswer, planSearch } from "./ai.js";
 import { env } from "./env.js";
 import { search, fetchFromSearchResults } from "./search.js";
 
@@ -20,7 +20,11 @@ app.get("/search", async (req, res) => {
     return;
   }
 
-  const results = await search(userQuery);
+  // Plan the search strategy using AI tool calls
+  const { searchQuery, sourceCount } = await planSearch(userQuery);
+  console.log(`birajlog search plan: query="${searchQuery}", sources=${sourceCount}`);
+
+  const results = await search(searchQuery, sourceCount);
 
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
