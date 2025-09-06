@@ -8,8 +8,7 @@ const openai = new OpenAI({
   apiKey: env.GROQ_API_KEY,
 });
 
-// const MODEL = "llama-3.3-70b-versatile";
-const MODEL = "openai/gpt-oss-120b";
+const DEFAULT_MODEL = "qwen/qwen3-32b";
 
 /**
  * Gets a response from the OpenAI API.
@@ -22,8 +21,13 @@ const MODEL = "openai/gpt-oss-120b";
  *                                         and a `Readable` when `stream` is `true`.
  */
 async function getResponse(messages, stream = true, options = {}) {
+  if (!options.model) {
+    options.model = DEFAULT_MODEL;
+  }
+
+  console.log("using model", options.model);
+
   const response = await openai.chat.completions.create({
-    model: MODEL,
     stream,
     messages,
     ...options,

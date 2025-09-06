@@ -1,6 +1,6 @@
 # AI Search
 
-This is a fairly simple project that was inspired by [Perplexity](https://perplexity.ai). It uses [gpt-oss-120b](https://huggingface.co/openai/gpt-oss-120b) hosted on [Groq](https://console.groq.com/docs/model/openai/gpt-oss-120b) and [Google Custom Search JSON API](https://developers.google.com/custom-search/v1/overview).
+This is a fairly simple project that was inspired by [Perplexity](https://perplexity.ai). It uses `qwen/qwen3-32b` , a reasoning model by Alibaba Cloud, hosted on [Groq](https://console.groq.com/docs/model/qwen/qwen3-32b) and [Google Custom Search JSON API](https://developers.google.com/custom-search/v1/overview).
 
 ![Screenshot](./images/ss.png)
 
@@ -29,7 +29,7 @@ This is a fairly simple project that was inspired by [Perplexity](https://perple
 ## Acknowledgements
 
 1. [Perplexity](https://perplexity.ai) for inspiration
-2. [OpenAI](https://huggingface.co/openai/gpt-oss-120b) for gpt-oss-120b model
+2. Alibaba for qwen3-32b
 3. [Groq](https://groq.com/) for inference
 4. [Google](https://developers.google.com/custom-search/v1/overview) for data
 5. [Claude](https://claude.ai/) for helping me with prompts

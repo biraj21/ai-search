@@ -1,10 +1,33 @@
-import { Globe, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
+import { Globe, Sparkles, ChevronDown, ChevronUp, Brain } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { Source } from "@/types";
 import Tooltip from "./ui/Tooltip";
+
+// Function to extract and separate reasoning from content
+function extractReasoning(content: string) {
+  const thinkMatch = content.match(/<think>(.*?)<\/think>/s);
+  if (thinkMatch) {
+    const reasoning = thinkMatch[1].trim();
+    const cleanContent = content.replace(/<think>.*?<\/think>/s, "").trim();
+    return { reasoning, content: cleanContent };
+  }
+  return { reasoning: null, content };
+}
+
+// Function to convert plain [n] citations to markdown links in reasoning
+function processReasoningCitations(reasoning: string, sources: Source[]) {
+  return reasoning.replace(/\[(\d+)\]/g, (match, num) => {
+    const index = parseInt(num);
+    if (index > 0 && index <= sources.length) {
+      const source = sources[index - 1];
+      return `[${num}](${source.link})`;
+    }
+    return match;
+  });
+}
 
 interface SearchResultsProps {
   sources: Source[];
@@ -16,6 +39,13 @@ interface SearchResultsProps {
 const SearchResults: React.FC<SearchResultsProps> = ({ sources, content, isStreaming, hasStartedStreaming }) => {
   const responseRef = useRef<HTMLDivElement>(null);
   const [sourcesExpanded, setSourcesExpanded] = useState(true);
+  const [reasoningExpanded, setReasoningExpanded] = useState(false);
+
+  // Extract reasoning and clean content
+  const { reasoning, content: cleanContent } = extractReasoning(content);
+
+  // Process reasoning citations to convert [n] to [n](url)
+  const processedReasoning = reasoning ? processReasoningCitations(reasoning, sources) : null;
 
   // Auto-collapse sources when streaming starts
   useEffect(() => {
@@ -112,6 +142,95 @@ const SearchResults: React.FC<SearchResultsProps> = ({ sources, content, isStrea
         </div>
       )}
 
+      {/* Reasoning Section */}
+      {processedReasoning && (
+        <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4">
+          <button
+            onClick={() => setReasoningExpanded(!reasoningExpanded)}
+            className="flex items-center justify-between w-full text-left"
+          >
+            <div className="flex items-center gap-2">
+              <Brain className="w-4 h-4 text-blue-400" />
+              <span className="font-medium text-slate-200">AI Reasoning</span>
+              <span className="text-xs text-blue-400/70 bg-blue-500/10 px-2 py-0.5 rounded-full">
+                See how I analyzed the sources
+              </span>
+            </div>
+            {reasoningExpanded ? (
+              <ChevronUp className="w-4 h-4 text-slate-400" />
+            ) : (
+              <ChevronDown className="w-4 h-4 text-slate-400" />
+            )}
+          </button>
+
+          <div
+            className={`transition-all duration-300 ease-in-out ${
+              reasoningExpanded ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0 overflow-hidden"
+            }`}
+          >
+            <div
+              className="text-slate-300 text-sm leading-relaxed bg-slate-900/30 rounded-lg p-3 overflow-y-auto max-h-80"
+              id="reasoning-response"
+            >
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  p: ({ node, ...props }) => <p className="mb-2 last:mb-0" {...props} />,
+
+                  a: ({ node, children, ...props }) => {
+                    if (!node) {
+                      throw new Error("node is undefined");
+                    }
+
+                    // @ts-ignore (probably their types are wrong idk)
+                    const index = Number(node.children[0].value);
+                    if (isNaN(index) || index < 0 || index >= sources.length) {
+                      return (
+                        <a {...props} target="_blank" rel="noreferrer">
+                          {children}
+                        </a>
+                      );
+                    }
+
+                    const source = sources[index - 1];
+                    props.href = source.link;
+
+                    return (
+                      <Tooltip
+                        content={
+                          <div className="w-64">
+                            <div className="flex items-center mb-2 text-sm text-gray-400">
+                              {source.image && (
+                                <img
+                                  src={source.image}
+                                  className="w-4 h-4 object-cover rounded mr-2"
+                                  onError={(e) => {
+                                    e.currentTarget.remove();
+                                  }}
+                                />
+                              )}
+                              <small className="line-clamp-1">{source.displayLink}</small>
+                            </div>
+                            <h3 className="font-medium text-white mb-1 text-sm">{source.title}</h3>
+                            <p className="line-clamp-3 text-sm text-gray-300 leading-relaxed">{source.snippet}</p>
+                          </div>
+                        }
+                      >
+                        <a {...props} href={source.link} target="_blank" rel="noreferrer" className="citation">
+                          {index}
+                        </a>
+                      </Tooltip>
+                    );
+                  },
+                }}
+              >
+                {processedReasoning}
+              </ReactMarkdown>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Answer Section */}
       {(content || isStreaming) && (
         <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
@@ -193,7 +312,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({ sources, content, isStrea
                   },
                 }}
               >
-                {content}
+                {cleanContent}
               </ReactMarkdown>
               {isStreaming && (
                 <span className="inline-flex items-center ml-1">

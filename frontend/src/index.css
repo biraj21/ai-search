@@ -29,11 +29,6 @@ body {
   letter-spacing: 0.01em;
 }
 
-/* Minimal transitions for performance */
-* {
-  transition: opacity 0.15s ease, transform 0.15s ease;
-}
-
 /* Custom scrollbar for Webkit browsers */
 ::-webkit-scrollbar {
   width: 8px;
@@ -101,4 +96,12 @@ body {
 }
 #search-response tbody tr:hover td {
   @apply bg-gray-700/30;
+}
+
+/* Reasoning section styling */
+#reasoning-response a {
+  @apply text-blue-400 underline decoration-blue-400/50 underline-offset-2;
+}
+#reasoning-response .citation {
+  @apply text-blue-400 bg-blue-500/10 border border-blue-500/20 text-xs rounded px-2 py-1 mx-1 font-medium;
 }
